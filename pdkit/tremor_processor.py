@@ -164,10 +164,12 @@ class TremorProcessor:
 
         frq = frq[range(int(signal_length / 2))]  # one side frequency range
         ts = normalised_transformed_signal[range(int(signal_length / 2))]
-        self.amplitude = sum(abs(ts[(frq > self.lower_frequency) & (frq < self.upper_frequency)]))
-        self.frequency = frq[abs(ts).argmax(axis=0)]
+        amplitude = sum(abs(ts[(frq > self.lower_frequency) & (frq < self.upper_frequency)]))
+        frequency = frq[abs(ts).argmax(axis=0)]
 
         logging.debug("tremor amplitude calculated")
+
+        return amplitude, frequency
 
     def tremor_amplitude_by_welch(self, data_frame):
         '''
@@ -179,10 +181,12 @@ class TremorProcessor:
             :param str upper_frequency: UPPER_FREQUENCY_TREMOR
         '''
         frq, Pxx_den = signal.welch(data_frame.filtered_signal.values, self.sampling_frequency, nperseg=self.window)
-        self.frequency = frq[Pxx_den.argmax(axis=0)]
-        self.amplitude = sum(Pxx_den[(frq > self.lower_frequency) & (frq < self.upper_frequency)])
+        frequency = frq[Pxx_den.argmax(axis=0)]
+        amplitude = sum(Pxx_den[(frq > self.lower_frequency) & (frq < self.upper_frequency)])
 
         logging.debug("tremor amplitude by welch calculated")
+
+        return amplitude, frequency
 
     def spkt_welch_density(x, param = [{"coeff":0}]):
         '''
@@ -212,9 +216,9 @@ class TremorProcessor:
 
             if method == 'fft':
                 data_frame_fft = self.fft_signal(data_frame_filtered)
-                self.tremor_amplitude(data_frame_fft)
+                return self.tremor_amplitude(data_frame_fft)
             else:
-                self.tremor_amplitude_by_welch(data_frame_filtered)
+                return self.tremor_amplitude_by_welch(data_frame_filtered)
 
         except ValueError as verr:
             logging.error("TremorProcessor ValueError ->%s", verr.message)
