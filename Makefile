@@ -12,5 +12,5 @@ docs:
 	$(MAKE) -C docs html
 
 package:
-	python setup.py sdist --universal
-	python setup.py bdist_wheel
+	python setup.py sdist
+	python setup.py bdist_wheel --universal
