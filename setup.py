@@ -56,5 +56,8 @@ setup(
         'Programming Language :: Python :: Implementation :: CPython',
         'Topic :: Software Development :: Libraries',
         'Topic :: Scientific/Engineering :: Bio-Informatics',
-    ]
+    ],
+    cmdclass={
+        'verify': VerifyVersionCommand,
+    }
 )
