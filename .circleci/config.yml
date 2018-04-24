@@ -24,6 +24,7 @@ jobs:
             source bin/activate
             pip install -r requirements.txt --user
             pip install . --user
+            pip install twine
 
       - run:
           name: run tests
